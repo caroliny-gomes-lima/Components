@@ -1,19 +1,29 @@
 import React from "react";
 import styled from "styled-components";
-import { Button, Menu, MenuItem } from "@mui/material";
+import { Button as BaseButton } from "@mui/base/Button";
+import { Menu, MenuItem } from "@mui/material";
 
-const ButtonStyles = styled(Button)(({ theme, fullWidth }) => {
-  return {
-    "&.MuiButton-root": {
-      width: fullWidth ? "100%" : "fit-content",
+const ButtonStyles = styled(BaseButton)(
+  ({ theme, fullWidth, $customColor }) => {
+    const { spacing } = theme;
+    return {
+      fontSize: "1rem",
       display: "flex",
+      width: fullWidth ? "100%" : "fit-content",
+      lineHeight: 1.5,
+      padding: spacing(1, 2),
+      border: "unset",
+      boxShadow: "0 2px 1px 1px rgba(45, 45, 60, 0.2)",
+      borderRadius: "5px",
+      backgroundColor: $customColor ? $customColor : "blue",
+      color: "white",
       "&:hover": {
-        backgroundColor: "white",
-        color: "black",
+        backgroundColor: $customColor ? $customColor  + 70 : "blue" + 70,
+        color: "white",
       },
-    },
-  };
-});
+    };
+  }
+);
 
 const MenuStyles = styled(Menu)(({ theme, color }) => {
   const { spacing } = theme;
@@ -25,11 +35,11 @@ const MenuStyles = styled(Menu)(({ theme, color }) => {
       borderRadius: 2,
       boxShadow: "0 1px 4px #494949",
       "& .MuiMenuItem-root": {
-        backgroundColor: color ? color : "white",
-        color: "black",
+        backgroundColor: color ? color : "black",
+        color: "white",
         "&:hover": {
-          backgroundColor:  "black",
-          color: "white",
+          backgroundColor: "white",
+          color: "black",
         },
       },
       "&::before": {
@@ -42,7 +52,7 @@ const MenuStyles = styled(Menu)(({ theme, color }) => {
         height: 10,
         backgroundColor: "black",
         transform: "translateY(-50%) rotate(45deg)",
-        zIndex: 0, //O zIndex significa sobreposição, ou seja organiza o elemento entre, na frente ou atrás de um elemento
+        zIndex: 0,
       },
     },
   };
@@ -76,7 +86,7 @@ function DropDownButtonSelect({
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+ 
   return (
     <div>
       <ButtonStyles
@@ -86,6 +96,7 @@ function DropDownButtonSelect({
         aria-haspopup="true"
         fullWidth={fullWidth}
         onClick={handleOpen}
+        $customColor={customColor}
         {...props}
       >
         {label ? label : null}

@@ -1,130 +1,54 @@
 import React from "react";
+import { useTransition, animated } from "@react-spring/web";
 import styled from "styled-components";
-import { Button as BaseButton } from "@mui/base/Button";
-import { Menu, MenuItem } from "@mui/material";
 
-const ButtonStyles = styled(BaseButton)(
-  ({ theme, fullWidth, $customColor }) => {
-    const { spacing } = theme;
-    return {
-      fontSize: "1rem",
-      display: "flex",
-      width: fullWidth ? "100%" : "fit-content",
-      lineHeight: 1.5,
-      padding: spacing(1, 2),
-      border: "unset",
-      boxShadow: "0 2px 1px 1px rgba(45, 45, 60, 0.2)",
-      borderRadius: "5px",
-      backgroundColor: $customColor ? $customColor : "blue",
-      color: "white",
-      "&:hover": {
-        backgroundColor: $customColor ? $customColor  + 70 : "blue" + 70,
-        color: "white",
-      },
-    };
-  }
-);
-
-const MenuStyles = styled(Menu)(({ theme, color }) => {
-  const { spacing } = theme;
+const ImageContiner = styled.div(() => {
   return {
-    "& .MuiPaper-root": {
-      backgroundColor: color ? color : "white",
-      marginTop: theme.spacing(1),
-      minWidth: 120,
-      borderRadius: 2,
-      boxShadow: "0 1px 4px #494949",
-      "& .MuiMenuItem-root": {
-        backgroundColor: color ? color : "black",
-        color: "white",
-        "&:hover": {
-          backgroundColor: "white",
-          color: "black",
-        },
-      },
-      "&::before": {
-        content: '""',
-        display: "block",
-        position: "absolute",
-        top: spacing(0),
-        right: spacing(2),
-        width: 10,
-        height: 10,
-        backgroundColor: "black",
-        transform: "translateY(-50%) rotate(45deg)",
-        zIndex: 0,
-      },
-    },
+    justifyContent: "center",
+    width: "140vh",
+    height: "79vh",
+  };
+});
+
+const Image = styled.img(() => {
+  return {
+    alignSelf: "center",
+    height: "auto",
+    width: "100%",
+    marginLeft: "20px",
+    marginRight: "20px",
   };
 });
 
 interface Props {
-  label: string;
-  customColor: string;
-  options: Array<{
-    action: () => void;
-    name: string;
-  }>;
-  fullWidth: boolean;
-  name: string;
+  imagesArrayData: Array<{id: number, src: string}>
 }
 
-function DropDownButtonSelect({
-  name,
-  label,
-  options,
-  fullWidth = true,
-  customColor,
-  ...props
-}: Props): JSX.Element {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+function SliderImages({ imagesArrayData }: Props): JSX.Element {
+  const [index, setIndex] = React.useState<number>(0);
 
-  const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
- 
-  return (
-    <div>
-      <ButtonStyles
-        id="buttonMenu-select"
-        aria-controls={open ? "menu-select" : undefined}
-        aria-expanded={open ? "true" : undefined}
-        aria-haspopup="true"
-        fullWidth={fullWidth}
-        onClick={handleOpen}
-        $customColor={customColor}
-        {...props}
-      >
-        {label ? label : null}
-      </ButtonStyles>
-      <MenuStyles
-        id="menu-select"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{ onClick: handleClose }}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        transformOrigin={{ vertical: "top", horizontal: "center" }}
-        color={customColor}
-      >
-        {options?.map(({ action, name }, index: number) => (
-          <MenuItem
-            key={name}
-            onClick={() => {
-              action();
-              setAnchorEl(null);
-            }}
-          >
-            {name}
-          </MenuItem>
-        ))}
-      </MenuStyles>
-    </div>
-  );
+  React.useEffect(() => {
+    const slideInterval = setInterval(() => {
+      setIndex((i) => (i + 1) % imagesArrayData.length);
+    }, 5000);
+
+    return () => clearInterval(slideInterval);
+  }, []);
+
+  const transition = useTransition(imagesArrayData[index].src, {
+    from: { opacity: 0, transform: "translateX(250px)" },
+    enter: { opacity: 1, transform: "translateX(-20px)" },
+  });
+
+  const fragment = transition((style, item) => (
+    <ImageContiner>
+      <animated.div style={{ ...style}}>
+        <Image src={item} />
+      </animated.div>
+    </ImageContiner>
+  ));
+
+  return <div>{fragment}</div>;
 }
 
-export default DropDownButtonSelect;
+export default SliderImages;

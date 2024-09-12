@@ -7,6 +7,3 @@ Componentes globais para projetos front-end desenvolvidos em React e Typescript 
   <a href="https://styled-components.com/"><img align="center" alt="icon-styled-components" height="50" width="50" src="https://www.daggala.com/static/228867c3668e439101821568a8a03b54/ec333/sc.png"></a>
    <a href="https://www.npmjs.com/package/react-spring/v/8.0.27"><img align="center" alt="icon-react-spring" height="60" width="60" src="https://i.imgur.com/QZownhg.png"></a>
 </div><br/>
-
-
-  Material UI e styled-components / Created components on React, Material UI and styled-components
